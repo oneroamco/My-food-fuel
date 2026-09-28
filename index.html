@@ -290,7 +290,7 @@
           <button class="filter-btn" data-cat="breakfast">Brekkie</button>
           <button class="filter-btn" data-cat="lunch">Lunch</button>
           <button class="filter-btn" data-cat="dinner">Dinner</button>
-          <button class="filter-btn" data-cat="meats">Meats</button>
+          <button class="filter-btn" data-cat="meats">Meats & Sides</button>
           <button class="filter-btn" data-cat="snacks">Snacks</button>
           <button class="filter-btn" data-cat="fruitveg">Fruit & Veg</button>
           <button class="filter-btn" data-cat="drinks">Drinks</button>
@@ -316,7 +316,7 @@
       <h2>Create Custom Food</h2>
       <input type="text" id="custom-name" placeholder="Food Name (e.g. Grandma's Soup)">
       <input type="number" id="custom-cals" placeholder="Calories (e.g. 250)">
-      <input type="number" id="custom-score" placeholder="Goodness Score (-2 to 5)">
+      <input type="number" id="custom-score" placeholder="Goodness Score (0 to 5)">
       <input type="text" id="custom-emoji" placeholder="Emoji (e.g. 🍲)">
       <br>
       <button class="modal-btn" onclick="saveCustomFood()">Add to Plate</button>
@@ -388,89 +388,123 @@
       }
     }
 
-    // 150+ Food Database
+    // Huge Food Database - NO Negative Scores, NO "Kids Portion" text.
     const foodDatabase = [
       // BREAKFAST
-      { id: 'b1', name: 'Scrambled Eggs on Sourdough', cal: 380, cat: 'breakfast', emoji: '🥚', score: 3, info: 'Eggs are packed with protein to build strong muscles!' },
-      { id: 'b2', name: 'Smashed Avo on Toast', cal: 340, cat: 'breakfast', emoji: '🥑', score: 4, info: 'Avocado has healthy fats that are great for your brain.' },
-      { id: 'b3', name: 'Oats with Berries', cal: 320, cat: 'breakfast', emoji: '🥣', score: 4, info: 'Oats give you long-lasting energy for the whole school morning.' },
-      { id: 'b4', name: 'Bacon, Eggs & Toast', cal: 460, cat: 'breakfast', emoji: '🍳', score: 1, info: 'A tasty weekend treat, but bacon is high in salt.' },
+      { id: 'b1', name: 'Scrambled Eggs on Sourdough', cal: 380, cat: 'breakfast', emoji: '🥚', score: 4, info: 'Eggs are packed with protein to build strong muscles!' },
+      { id: 'b2', name: 'Smashed Avo on Toast', cal: 340, cat: 'breakfast', emoji: '🥑', score: 5, info: 'Avocado has healthy fats that are great for your brain.' },
+      { id: 'b3', name: 'Oats with Berries', cal: 320, cat: 'breakfast', emoji: '🥣', score: 5, info: 'Oats give you long-lasting energy for the whole school morning.' },
+      { id: 'b4', name: 'Bacon, Eggs & Toast', cal: 460, cat: 'breakfast', emoji: '🍳', score: 1, info: 'A tasty treat, but bacon is high in salt.' },
       { id: 'b5', name: 'Pancakes with Maple Syrup', cal: 430, cat: 'breakfast', emoji: '🥞', score: 0, info: 'Yummy! But high in sugar, so it gives short energy bursts.' },
-      { id: 'b6', name: 'Weet-Bix with Milk', cal: 240, cat: 'breakfast', emoji: '🥣', score: 3, info: 'A classic Aussie start! Great fiber and iron.' },
-      { id: 'b7', name: 'Vegemite on Toast', cal: 190, cat: 'breakfast', emoji: '🍞', score: 2, info: 'Full of B-vitamins for energy, but quite salty.' },
+      { id: 'b6', name: 'Weet-Bix with Milk (2)', cal: 180, cat: 'breakfast', emoji: '🥣', score: 4, info: 'A classic Aussie start! Great fiber and iron.' },
+      { id: 'b7', name: 'Vegemite on Toast (2)', cal: 190, cat: 'breakfast', emoji: '🍞', score: 2, info: 'Full of B-vitamins for energy.' },
       { id: 'b8', name: 'Greek Yogurt & Honey', cal: 210, cat: 'breakfast', emoji: '🍯', score: 3, info: 'Yogurt has probiotics that keep your tummy happy.' },
-      { id: 'b9', name: 'Breakfast Burrito', cal: 480, cat: 'breakfast', emoji: '🌯', score: 2, info: 'Beans and eggs give you a big protein punch.' },
+      { id: 'b9', name: 'Breakfast Burrito', cal: 480, cat: 'breakfast', emoji: '🌯', score: 3, info: 'Beans and eggs give you a big protein punch.' },
       { id: 'b10', name: 'Fruit Salad Bowl', cal: 150, cat: 'breakfast', emoji: '🥗', score: 5, info: 'Vitamins galore! Nature’s candy.' },
-      { id: 'b11', name: 'Smoothie Bowl', cal: 300, cat: 'breakfast', emoji: '🥥', score: 4, info: 'Blended fruits give you instant vitamins and hydration.' },
-      { id: 'b12', name: 'Toast with Peanut Butter', cal: 280, cat: 'breakfast', emoji: '🥜', score: 3, info: 'Peanut butter gives you healthy fats and protein.' },
+      { id: 'b11', name: 'Toast with Peanut Butter', cal: 280, cat: 'breakfast', emoji: '🥜', score: 3, info: 'Peanut butter gives you healthy fats and protein.' },
+      { id: 'b12', name: 'Crumpets with Honey (2)', cal: 220, cat: 'breakfast', emoji: '🥞', score: 1, info: 'A warm, comforting breakfast treat.' },
+      { id: 'b13', name: 'Corn Flakes with Milk', cal: 200, cat: 'breakfast', emoji: '🥣', score: 2, info: 'A light and crunchy start to the day.' },
+      { id: 'b14', name: 'Raisin Toast with Butter', cal: 260, cat: 'breakfast', emoji: '🍞', score: 2, info: 'A sweet and spiced morning favorite.' },
+      { id: 'b15', name: 'Baked Beans on Toast', cal: 320, cat: 'breakfast', emoji: '🥫', score: 4, info: 'Beans are an awesome source of dietary fiber.' },
+      { id: 'b16', name: 'Hash Brown', cal: 150, cat: 'breakfast', emoji: '🥔', score: 1, info: 'A crispy and savory potato side.' },
 
       // LUNCH
-      { id: 'l1', name: 'Ham, Cheese & Tomato Toastie', cal: 380, cat: 'lunch', emoji: '🥪', score: 2, info: 'A warm classic! Provides calcium from the cheese.' },
-      { id: 'l2', name: 'Chicken Salad Wrap', cal: 360, cat: 'lunch', emoji: '🌯', score: 4, info: 'Chicken builds muscle, and salad adds vital crunch and vitamins.' },
-      { id: 'l3', name: 'Aussie Meat Pie', cal: 450, cat: 'lunch', emoji: '🥧', score: -1, info: 'A footy favorite, but very high in saturated fat. Sometimes food!' },
-      { id: 'l4', name: 'Sausage Roll with Sauce', cal: 410, cat: 'lunch', emoji: '🥐', score: -1, info: 'Delicious bakery treat, best kept for special occasions.' },
-      { id: 'l5', name: 'Tuna & Sweetcorn Melt', cal: 390, cat: 'lunch', emoji: '🐟', score: 3, info: 'Tuna has Omega-3s which make your brain super smart.' },
+      { id: 'l1', name: 'Ham, Cheese & Tomato Toastie', cal: 380, cat: 'lunch', emoji: '🥪', score: 3, info: 'A warm classic! Provides calcium from the cheese.' },
+      { id: 'l2', name: 'Chicken Salad Wrap', cal: 360, cat: 'lunch', emoji: '🌯', score: 5, info: 'Chicken builds muscle, and salad adds vital crunch and vitamins.' },
+      { id: 'l3', name: 'Aussie Meat Pie', cal: 450, cat: 'lunch', emoji: '🥧', score: 0, info: 'A footy favorite, but quite high in saturated fat. Sometimes food!' },
+      { id: 'l4', name: 'Bakery Sausage Roll', cal: 410, cat: 'lunch', emoji: '🥐', score: 0, info: 'Delicious bakery treat, best kept for special occasions.' },
+      { id: 'l5', name: 'Tuna & Sweetcorn Melt', cal: 390, cat: 'lunch', emoji: '🐟', score: 4, info: 'Tuna has Omega-3s which make your brain super smart.' },
       { id: 'l6', name: 'Banh Mi Pork Roll', cal: 470, cat: 'lunch', emoji: '🥖', score: 2, info: 'Fresh herbs inside are great for you, but the meats are rich.' },
-      { id: 'l7', name: 'Sushi Hand Rolls (2)', cal: 350, cat: 'lunch', emoji: '🍣', score: 3, info: 'Seaweed is packed with iodine for a healthy thyroid.' },
-      { id: 'l8', name: 'Leftover Spag Bol', cal: 460, cat: 'lunch', emoji: '🍝', score: 2, info: 'Carbs give you the energy to run around all afternoon.' },
-      { id: 'l9', name: 'Falafel Wrap', cal: 420, cat: 'lunch', emoji: '🧆', score: 4, info: 'Chickpeas are a magical plant protein with lots of fiber.' },
-      { id: 'l10', name: 'Chicken Schnitzel Roll', cal: 490, cat: 'lunch', emoji: '🥪', score: 1, info: 'Fried chicken is tasty but high in oil.' },
-      
+      { id: 'l7', name: 'Sushi Hand Rolls (2)', cal: 350, cat: 'lunch', emoji: '🍣', score: 4, info: 'Seaweed is packed with iodine for a healthy thyroid.' },
+      { id: 'l8', name: 'Leftover Spag Bol', cal: 460, cat: 'lunch', emoji: '🍝', score: 3, info: 'Carbs give you the energy to run around all afternoon.' },
+      { id: 'l9', name: 'Falafel Wrap', cal: 420, cat: 'lunch', emoji: '🧆', score: 5, info: 'Chickpeas are a magical plant protein with lots of fiber.' },
+      { id: 'l10', name: 'Cheese & Vegemite Scroll', cal: 310, cat: 'lunch', emoji: '🥨', score: 1, info: 'A savory bakery staple!' },
+      { id: 'l11', name: 'Zucchini Slice', cal: 280, cat: 'lunch', emoji: '🥧', score: 4, info: 'Packed with hidden veggies and protein from eggs.' },
+      { id: 'l12', name: 'Egg Salad Sandwich', cal: 350, cat: 'lunch', emoji: '🥪', score: 4, info: 'Eggs provide complete proteins for your body.' },
+      { id: 'l13', name: 'Chicken Noodle Soup', cal: 210, cat: 'lunch', emoji: '🍜', score: 3, info: 'Warm and comforting on a chilly day.' },
+      { id: 'l14', name: 'Pita with Tzatziki', cal: 240, cat: 'lunch', emoji: '🥙', score: 3, info: 'A nice Mediterranean snack with yogurt and cucumber dip.' },
+
       // DINNER
-      { id: 'd1', name: 'Classic Spag Bol', cal: 580, cat: 'dinner', emoji: '🍝', score: 3, info: 'Tomatoes in the sauce have lycopene, good for your heart.' },
+      { id: 'd1', name: 'Classic Spag Bol', cal: 580, cat: 'dinner', emoji: '🍝', score: 4, info: 'Tomatoes in the sauce have lycopene, good for your heart.' },
       { id: 'd2', name: 'Grilled Fish & Salad', cal: 410, cat: 'dinner', emoji: '🐟', score: 5, info: 'Perfect brain food with lean protein and veggies.' },
-      { id: 'd3', name: 'Fish & Hot Chips', cal: 610, cat: 'dinner', emoji: '🍟', score: 0, info: 'Fried food is heavy on the tummy. Enjoy it slowly!' },
-      { id: 'd4', name: 'Sunday Roast Lamb & Veg', cal: 620, cat: 'dinner', emoji: '🍖', score: 3, info: 'Lamb gives you iron, and roast veggies are full of fiber.' },
-      { id: 'd5', name: 'Chicken Parma & Chips', cal: 680, cat: 'dinner', emoji: '🍗', score: 0, info: 'A pub classic! High calories, gives you lots of fuel to burn.' },
-      { id: 'd6', name: 'Beef Tacos (3)', cal: 490, cat: 'dinner', emoji: '🌮', score: 3, info: 'Adding lettuce and tomato makes this a great balanced meal.' },
-      { id: 'd7', name: 'Butter Chicken & Rice', cal: 570, cat: 'dinner', emoji: '🍛', score: 2, info: 'Spices are great for you, but the creamy sauce is rich.' },
-      { id: 'd8', name: 'Beef Lasagne', cal: 630, cat: 'dinner', emoji: '🧀', score: 2, info: 'Layers of pasta and cheese give you massive energy.' },
-      { id: 'd9', name: 'Mediterranean Chicken Skewers', cal: 400, cat: 'dinner', emoji: '🍢', score: 5, info: 'Lean protein and olive oil are the heart-healthy Mediterranean way!' },
-      { id: 'd10', name: 'Vegetable Stir Fry', cal: 350, cat: 'dinner', emoji: '🥢', score: 5, info: 'Different colored veggies give you a rainbow of vitamins.' },
-      { id: 'd11', name: 'Homemade Pizza', cal: 500, cat: 'dinner', emoji: '🍕', score: 2, info: 'Making it at home means less salt and more healthy toppings.' },
+      { id: 'd3', name: 'Fish & Hot Chips', cal: 610, cat: 'dinner', emoji: '🍟', score: 1, info: 'Fried food is heavy on the tummy. Enjoy it slowly!' },
+      { id: 'd4', name: 'Sunday Roast Lamb & Veg', cal: 620, cat: 'dinner', emoji: '🍖', score: 4, info: 'Lamb gives you iron, and roast veggies are full of fiber.' },
+      { id: 'd5', name: 'Chicken Parma & Chips', cal: 680, cat: 'dinner', emoji: '🍗', score: 1, info: 'A pub classic! High calories, gives you lots of fuel to burn.' },
+      { id: 'd6', name: 'Beef Tacos (2)', cal: 420, cat: 'dinner', emoji: '🌮', score: 4, info: 'Adding lettuce and tomato makes this a great balanced meal.' },
+      { id: 'd7', name: 'Butter Chicken & Rice', cal: 570, cat: 'dinner', emoji: '🍛', score: 3, info: 'Spices are great for you, but the creamy sauce is rich.' },
+      { id: 'd8', name: 'Beef Lasagne', cal: 630, cat: 'dinner', emoji: '🧀', score: 3, info: 'Layers of pasta and cheese give you massive energy.' },
+      { id: 'd9', name: 'Vegetable Stir Fry', cal: 350, cat: 'dinner', emoji: '🥢', score: 5, info: 'Different colored veggies give you a rainbow of vitamins.' },
+      { id: 'd10', name: 'Homemade Pizza', cal: 500, cat: 'dinner', emoji: '🍕', score: 3, info: 'Making it at home means less salt and more healthy toppings.' },
+      { id: 'd11', name: 'Macaroni & Cheese', cal: 480, cat: 'dinner', emoji: '🧀', score: 2, info: 'Comfort food! Better when you add some peas on the side.' },
+      { id: 'd12', name: 'Roast Chicken Thigh & Veg', cal: 450, cat: 'dinner', emoji: '🍗', score: 4, info: 'Chicken thighs are juicy and packed with zinc.' },
+      { id: 'd13', name: 'Spinach & Ricotta Cannelloni', cal: 490, cat: 'dinner', emoji: '🍝', score: 4, info: 'Sneaking dark leafy greens into tasty pasta!' },
+      { id: 'd14', name: 'Chicken Stir-fry with Noodles', cal: 520, cat: 'dinner', emoji: '🍜', score: 4, info: 'A great balance of lean meat, veggies, and carbs.' },
 
       // MEATS & SIDES
-      { id: 'm1', name: '200g Rump Steak', cal: 420, cat: 'meats', emoji: '🥩', score: 2, info: 'Steak is packed with iron for healthy red blood cells.' },
-      { id: 'm2', name: '200g Grilled Chicken', cal: 330, cat: 'meats', emoji: '🍗', score: 4, info: 'Lean chicken is pure muscle-building fuel.' },
-      { id: 'm3', name: 'Sausages (2)', cal: 350, cat: 'meats', emoji: '🌭', score: -1, info: 'Sausages are fun but high in hidden fats.' },
-      { id: 'm4', name: 'Mashed Potatoes', cal: 140, cat: 'meats', emoji: '🥔', score: 2, info: 'Potatoes are great starchy carbs for fast energy.' },
-      { id: 'm5', name: 'Hot Chips (Chicken Salt)', cal: 280, cat: 'meats', emoji: '🍟', score: -1, info: 'Salty and deep fried. Delicious, but a sometimes food.' },
-      { id: 'm6', name: 'Steamed Rice', cal: 200, cat: 'meats', emoji: '🍚', score: 2, info: 'Rice is a staple carb that fuels athletes.' },
-      { id: 'm7', name: 'Pasta Bowl (Plain)', cal: 210, cat: 'meats', emoji: '🍝', score: 2, info: 'Pasta gives you complex carbs for long sports games.' },
+      { id: 'm1', name: '200g Rump Steak', cal: 420, cat: 'meats', emoji: '🥩', score: 3, info: 'Steak is packed with iron for healthy red blood cells.' },
+      { id: 'm2', name: '150g Grilled Chicken', cal: 250, cat: 'meats', emoji: '🍗', score: 5, info: 'Lean chicken is pure muscle-building fuel.' },
+      { id: 'm3', name: 'Sausages (2)', cal: 350, cat: 'meats', emoji: '🌭', score: 0, info: 'Sausages are fun but high in hidden fats.' },
+      { id: 'm4', name: 'Mashed Potatoes', cal: 140, cat: 'meats', emoji: '🥔', score: 3, info: 'Potatoes are great starchy carbs for fast energy.' },
+      { id: 'm5', name: 'Hot Chips (Chicken Salt)', cal: 280, cat: 'meats', emoji: '🍟', score: 0, info: 'Salty and deep fried. Delicious, but a sometimes food.' },
+      { id: 'm6', name: 'Steamed Rice (1 Cup)', cal: 200, cat: 'meats', emoji: '🍚', score: 3, info: 'Rice is a staple carb that fuels athletes.' },
+      { id: 'm7', name: 'Pasta Bowl (Plain)', cal: 210, cat: 'meats', emoji: '🍝', score: 3, info: 'Pasta gives you complex carbs for long sports games.' },
       { id: 'm8', name: 'Roast Sweet Potato', cal: 150, cat: 'meats', emoji: '🍠', score: 5, info: 'Sweet potatoes have Vitamin A for super eyesight.' },
-      
+      { id: 'm9', name: 'Pork & Apple Sausage', cal: 180, cat: 'meats', emoji: '🌭', score: 1, info: 'A sweeter sausage, good for a weekend BBQ.' },
+      { id: 'm10', name: 'Sweet Potato Fries', cal: 220, cat: 'meats', emoji: '🍟', score: 2, info: 'A slightly better alternative to regular hot chips.' },
+
       // FRUIT & VEG
-      { id: 'fv1', name: 'Pink Lady Apple', cal: 80, cat: 'fruitveg', emoji: '🍎', score: 4, info: 'Apples have pectin, a fiber that feeds the good bacteria in your gut!' },
-      { id: 'fv2', name: 'Cavendish Banana', cal: 95, cat: 'fruitveg', emoji: '🍌', score: 4, info: 'Bananas are packed with potassium to stop muscle cramps.' },
+      { id: 'fv1', name: 'Pink Lady Apple', cal: 80, cat: 'fruitveg', emoji: '🍎', score: 5, info: 'Apples have pectin, a fiber that feeds the good bacteria in your gut!' },
+      { id: 'fv2', name: 'Cavendish Banana', cal: 95, cat: 'fruitveg', emoji: '🍌', score: 5, info: 'Bananas are packed with potassium to stop muscle cramps.' },
       { id: 'fv3', name: 'Carrot Sticks', cal: 30, cat: 'fruitveg', emoji: '🥕', score: 5, info: 'Carrots help you see in the dark thanks to Beta-Carotene!' },
       { id: 'fv4', name: 'Steamed Broccoli', cal: 45, cat: 'fruitveg', emoji: '🥦', score: 5, info: 'Broccoli looks like tiny trees and makes your bones super strong.' },
-      { id: 'fv5', name: 'Mango Cheek', cal: 105, cat: 'fruitveg', emoji: '🥭', score: 4, info: 'Mangoes are full of Vitamin C to stop you getting sick.' },
-      { id: 'fv6', name: 'Watermelon Wedge', cal: 70, cat: 'fruitveg', emoji: '🍉', score: 4, info: 'Watermelon is 92% water, keeping you hydrated on hot days.' },
-      { id: 'fv7', name: 'Navel Orange', cal: 70, cat: 'fruitveg', emoji: '🍊', score: 4, info: 'Oranges are the champions of Vitamin C.' },
+      { id: 'fv5', name: 'Mango Cheek', cal: 105, cat: 'fruitveg', emoji: '🥭', score: 5, info: 'Mangoes are full of Vitamin C to stop you getting sick.' },
+      { id: 'fv6', name: 'Watermelon Wedge', cal: 70, cat: 'fruitveg', emoji: '🍉', score: 5, info: 'Watermelon is 92% water, keeping you hydrated on hot days.' },
+      { id: 'fv7', name: 'Navel Orange', cal: 70, cat: 'fruitveg', emoji: '🍊', score: 5, info: 'Oranges are the champions of Vitamin C.' },
       { id: 'fv8', name: 'Strawberry Punnet', cal: 50, cat: 'fruitveg', emoji: '🍓', score: 5, info: 'Strawberries have antioxidants that act like shields for your cells.' },
       { id: 'fv9', name: 'Cucumber Slices', cal: 15, cat: 'fruitveg', emoji: '🥒', score: 5, info: 'Cool cucumbers hydrate your skin and body.' },
       { id: 'fv10', name: 'Cherry Tomatoes', cal: 20, cat: 'fruitveg', emoji: '🍅', score: 5, info: 'Bite-sized goodness for a healthy heart.' },
-      { id: 'fv11', name: 'Kiwi Fruit', cal: 45, cat: 'fruitveg', emoji: '🥝', score: 4, info: 'Fuzzy on the outside, packed with vitamins inside.' },
-      { id: 'fv12', name: 'Spinach Leaves', cal: 10, cat: 'fruitveg', emoji: '🥬', score: 5, info: 'Popeye was right! Spinach is loaded with iron.' },
+      { id: 'fv11', name: 'Kiwi Fruit', cal: 45, cat: 'fruitveg', emoji: '🥝', score: 5, info: 'Fuzzy on the outside, packed with vitamins inside.' },
+      { id: 'fv12', name: 'Spinach Leaves', cal: 10, cat: 'fruitveg', emoji: '🥬', score: 5, info: 'Spinach is loaded with iron.' },
+      { id: 'fv13', name: 'Celery Sticks', cal: 10, cat: 'fruitveg', emoji: '🥬', score: 5, info: 'Super crunchy and basically zero calories. Great with peanut butter!' },
+      { id: 'fv14', name: 'Sugar Snap Peas', cal: 35, cat: 'fruitveg', emoji: '🫛', score: 5, info: 'Sweet and crunchy little pods full of vitamins.' },
+      { id: 'fv15', name: 'Capsicum Strips', cal: 25, cat: 'fruitveg', emoji: '🫑', score: 5, info: 'Red capsicum actually has more Vitamin C than an orange!' },
+      { id: 'fv16', name: 'Rockmelon Slice', cal: 40, cat: 'fruitveg', emoji: '🍈', score: 5, info: 'Sweet and hydrating with a brilliant orange color.' },
+      { id: 'fv17', name: 'Sweetcorn Cob', cal: 90, cat: 'fruitveg', emoji: '🌽', score: 4, info: 'A great source of fiber and energy.' },
+      { id: 'fv18', name: 'Green Beans', cal: 30, cat: 'fruitveg', emoji: '🫘', score: 5, info: 'Excellent source of folic acid.' },
 
       // SNACKS
-      { id: 's1', name: 'Hummus & Crackers', cal: 180, cat: 'snacks', emoji: '🍘', score: 3, info: 'Hummus is made of chickpeas—great plant energy.' },
-      { id: 's2', name: 'Fairy Bread', cal: 110, cat: 'snacks', emoji: '🧚', score: -2, info: 'Pure sugar and butter! A party classic, but definitely a sometimes food.' },
-      { id: 's3', name: 'Tim Tam (1)', cal: 95, cat: 'snacks', emoji: '🍫', score: -1, info: 'A chocolatey treat. Keep to just one or two!' },
+      { id: 's1', name: 'Hummus & Crackers', cal: 180, cat: 'snacks', emoji: '🍘', score: 4, info: 'Hummus is made of chickpeas—great plant energy.' },
+      { id: 's2', name: 'Fairy Bread (1 slice)', cal: 110, cat: 'snacks', emoji: '🧚', score: 0, info: 'Pure sugar and butter! A party classic.' },
+      { id: 's3', name: 'Tim Tam (1)', cal: 95, cat: 'snacks', emoji: '🍫', score: 0, info: 'A chocolatey treat. Keep to just one or two!' },
       { id: 's4', name: 'Handful of Almonds', cal: 160, cat: 'snacks', emoji: '🥜', score: 5, info: 'Almonds give you healthy brain fats to help you focus.' },
-      { id: 's5', name: 'Cheese Stick', cal: 80, cat: 'snacks', emoji: '🧀', score: 2, info: 'Calcium in cheese builds super strong bones and teeth.' },
-      { id: 's6', name: 'Potato Crisps (Packet)', cal: 150, cat: 'snacks', emoji: '🥔', score: -1, info: 'Crispy and salty. Try to swap for popcorn sometimes!' },
-      { id: 's7', name: 'Air-popped Popcorn', cal: 90, cat: 'snacks', emoji: '🍿', score: 3, info: 'Popcorn is actually a whole grain with lots of fiber.' },
-      { id: 's8', name: 'Chocolate Bar', cal: 250, cat: 'snacks', emoji: '🍫', score: -2, info: 'High in sugar and fat. Tastes great, but zero superpowers.' },
-      { id: 's9', name: 'Jatz Crackers & Cheese', cal: 180, cat: 'snacks', emoji: '🧀', score: 1, info: 'A tasty savory snack, but the crackers are a bit salty.' },
+      { id: 's5', name: 'Cheese Stick', cal: 80, cat: 'snacks', emoji: '🧀', score: 3, info: 'Calcium in cheese builds super strong bones and teeth.' },
+      { id: 's6', name: 'Potato Crisps (Packet)', cal: 150, cat: 'snacks', emoji: '🥔', score: 0, info: 'Crispy and salty. Try to swap for popcorn sometimes!' },
+      { id: 's7', name: 'Air-popped Popcorn', cal: 90, cat: 'snacks', emoji: '🍿', score: 4, info: 'Popcorn is actually a whole grain with lots of fiber.' },
+      { id: 's8', name: 'Chocolate Bar', cal: 250, cat: 'snacks', emoji: '🍫', score: 0, info: 'High in sugar and fat. Tastes great, but zero superpowers.' },
+      { id: 's9', name: 'Jatz Crackers & Cheese', cal: 180, cat: 'snacks', emoji: '🧀', score: 2, info: 'A tasty savory snack.' },
+      { id: 's10', name: 'Shapes (Barbecue, handful)', cal: 120, cat: 'snacks', emoji: '🍘', score: 1, info: 'Flavor you can see! But they are quite salty.' },
+      { id: 's11', name: 'Shapes (Pizza, handful)', cal: 120, cat: 'snacks', emoji: '🍘', score: 1, info: 'A classic Aussie lunchbox addition.' },
+      { id: 's12', name: 'Tiny Teddies (Packet)', cal: 110, cat: 'snacks', emoji: '🐻', score: 1, info: 'Sweet little biscuits. Fun to eat!' },
+      { id: 's13', name: 'LCMs Bar', cal: 90, cat: 'snacks', emoji: '🍫', score: 0, info: 'Rice bubbles and marshmallow! Mostly sugar.' },
+      { id: 's14', name: 'Fruit Roll-Up', cal: 50, cat: 'snacks', emoji: '🍓', score: 0, info: 'Sticky and sweet, but stick to real fruit for real energy.' },
+      { id: 's15', name: 'Carman\'s Muesli Bar', cal: 160, cat: 'snacks', emoji: '🥜', score: 3, info: 'Good oats and nuts for slower energy release.' },
+      { id: 's16', name: 'Lamington', cal: 200, cat: 'snacks', emoji: '🥥', score: 0, info: 'Sponge cake, chocolate, and coconut. An Aussie legend!' },
+      { id: 's17', name: 'Anzac Biscuit', cal: 140, cat: 'snacks', emoji: '🍪', score: 1, info: 'Made with oats and golden syrup. Delicious history!' },
+      { id: 's18', name: 'Iced Vovo', cal: 80, cat: 'snacks', emoji: '🥥', score: 0, info: 'Fondant and jam. Very sweet!' },
+      { id: 's19', name: 'Grain Waves', cal: 130, cat: 'snacks', emoji: '🌾', score: 2, info: 'Made with wholegrains, slightly better than regular chips.' },
+      { id: 's20', name: 'Rice Cakes with Peanut Butter', cal: 140, cat: 'snacks', emoji: '🍘', score: 4, info: 'Light and crunchy with a protein boost.' },
 
       // DRINKS
-      { id: 'dr1', name: 'WPI Protein Shake', cal: 120, cat: 'drinks', emoji: '🥤', score: 3, info: 'Protein repairs your muscles after a hard workout.' },
-      { id: 'dr2', name: 'Milo with Milk', cal: 180, cat: 'drinks', emoji: '🥛', score: 1, info: 'Gives you energy, but Milo has added sugar.' },
-      { id: 'dr3', name: 'Juice Popper', cal: 90, cat: 'drinks', emoji: '🧃', score: 0, info: 'Juice has vitamins but removes all the good fiber from the fruit.' },
-      { id: 'dr4', name: 'Glass of Cold Milk', cal: 120, cat: 'drinks', emoji: '🥛', score: 3, info: 'Packed with calcium for growing bones.' },
+      { id: 'dr1', name: 'WPI Protein Shake', cal: 120, cat: 'drinks', emoji: '🥤', score: 4, info: 'Protein repairs your muscles after a hard workout.' },
+      { id: 'dr2', name: 'Milo with Milk', cal: 180, cat: 'drinks', emoji: '🥛', score: 2, info: 'Gives you energy, but Milo has added sugar.' },
+      { id: 'dr3', name: 'Juice Popper', cal: 90, cat: 'drinks', emoji: '🧃', score: 1, info: 'Juice has vitamins but removes all the good fiber from the fruit.' },
+      { id: 'dr4', name: 'Glass of Cold Milk', cal: 120, cat: 'drinks', emoji: '🥛', score: 4, info: 'Packed with calcium for growing bones.' },
       { id: 'dr5', name: 'Water', cal: 0, cat: 'drinks', emoji: '💧', score: 5, info: 'The ultimate drink! Your body is 60% water.' },
-      { id: 'dr6', name: 'Soft Drink (Can)', cal: 140, cat: 'drinks', emoji: '🥤', score: -2, info: 'Lots of sugar and bubbles, bad for your teeth.' }
+      { id: 'dr6', name: 'Soft Drink (Can)', cal: 140, cat: 'drinks', emoji: '🥤', score: 0, info: 'Lots of sugar and bubbles, bad for your teeth.' },
+      { id: 'dr7', name: 'Coconut Water', cal: 45, cat: 'drinks', emoji: '🥥', score: 4, info: 'Nature\'s sports drink, full of electrolytes.' },
+      { id: 'dr8', name: 'Lemon-Lime & Bitters', cal: 110, cat: 'drinks', emoji: '🍋', score: 0, info: 'A pub favorite for kids, but mostly sugary lemonade.' },
+      { id: 'dr9', name: 'Cottee\'s Cordial', cal: 90, cat: 'drinks', emoji: '🥤', score: 0, info: 'Sweet and fruity, but remember water is always best!' },
+      { id: 'dr10', name: 'Sparkling Water with Lemon', cal: 0, cat: 'drinks', emoji: '🫧', score: 5, info: 'Bubbly and refreshing with zero sugar.' }
     ];
 
     const foodGrid = document.getElementById('food-grid');
@@ -490,7 +524,7 @@
           <div class="food-emoji">${food.emoji}</div>
           <div class="food-name">${food.name}</div>
           <div class="food-cal">${food.cal} KCAL</div>
-          <div><span class="food-score-badge">${food.score >= 0 ? '+' : ''}${food.score} Score</span></div>
+          <div><span class="food-score-badge">+${food.score} Score</span></div>
         `;
         foodGrid.appendChild(div);
       });
@@ -541,7 +575,9 @@
       
       if (!name || isNaN(cal) || isNaN(score)) return showToast("Please fill in the name, calories, and score!");
       
-      const newFood = { id: 'c' + Date.now(), name, cal, score, cat: 'custom', emoji, info: 'Custom foods are a mystery power!' };
+      const safeScore = Math.max(0, Math.min(score, 5)); // Ensure score is between 0 and 5
+      
+      const newFood = { id: 'c' + Date.now(), name, cal, score: safeScore, cat: 'custom', emoji, info: 'Custom foods are a mystery power!' };
       addToPlate(newFood);
       closeModals();
       document.getElementById('custom-name').value = '';
@@ -619,7 +655,7 @@
       `).join('');
 
       currentCals = plate.reduce((sum, item) => sum + (item.cal * item.qty), 0);
-      currentScore = plate.reduce((sum, item) => sum + (item.score * item.qty), 0);
+      currentScore = plate.reduce((sum, item) => sum + (Math.max(0, item.score) * item.qty), 0);
       
       // Update Cals
       document.getElementById('total-cals').innerHTML = `${currentCals} / ${GOAL} <span style="font-size:1.2rem">KCAL</span>`;
