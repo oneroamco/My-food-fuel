@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Food Fuel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-light: #FAFAFA;
+      --text-dark: #111111;
+      --pop-pink: #F72585;
+      --pop-blue: #4361EE;
+      --pop-teal: #00F5D4;
+      --pop-yellow: #FEE440;
+      --border-thick: 3px solid var(--text-dark);
+      --shadow-hard: 4px 4px 0px var(--text-dark);
+      --shadow-sm: 2px 2px 0px var(--text-dark);
+    }
+    
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: radial-gradient(#d5d5d5 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Outfit', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+
+    /* HEADER */
+    header {
+      background-color: var(--pop-blue);
+      width: 100%;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      border-bottom: var(--border-thick);
+      box-sizing: border-box;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      background: var(--pop-yellow);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-sm);
+      border-radius: 6px;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .logo-icon svg { width: 24px; height: 24px; fill: var(--text-dark); }
+    header h1 { font-size: 1.8rem; font-weight: 900; text-shadow: 2px 2px 0px var(--text-dark); }
+
+    .header-actions { display: flex; gap: 8px; }
+
+    /* BUTTONS */
+    .btn-action, .filter-btn {
+      background: white;
+      color: var(--text-dark);
+      border: var(--border-thick);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.8rem;
+      font-family: 'Space Grotesk', sans-serif;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.1s;
+      text-transform: uppercase;
+    }
+
+    .btn-action:active, .filter-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px var(--text-dark);
+    }
+    
+    .btn-action svg, .filter-btn svg { width: 14px; height: 14px; fill: var(--text-dark); stroke: var(--text-dark); stroke-width: 0.5;}
+
+    .filter-btn.active { background: var(--pop-teal); }
+
+    /* LAYOUT */
+    .container {
+      max-width: 1200px;
+      width: 95%;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+    }
+
+    @media(max-width: 850px) { .container { grid-template-columns: 1fr; } }
+
+    .trendy-card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-hard);
+      margin-bottom: 20px;
+    }
+
+    /* TRACKERS */
+    .trackers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    @media(max-width: 600px) { .trackers-grid { grid-template-columns: 1fr; } }
+
+    .tracker-box { text-align: center; padding: 15px; border-radius: 8px; border: var(--border-thick); box-shadow: var(--shadow-hard); }
+    .calorie-tracker { background-color: var(--pop-yellow); }
+    .goodness-tracker { background-color: white; }
+
+    .tracker-box h2 { font-size: 1.2rem; margin-bottom: 5px; }
+    
+    #total-cals { font-size: 2rem; font-weight: 900; margin: 10px 0; }
+    
+    #goodness-score-display {
+      font-size: 3.5rem; 
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      margin: 5px 0;
+      text-shadow: 2px 2px 0px var(--text-dark);
+      transition: color 0.3s;
+    }
+    .goodness-note { font-size: 0.8rem; font-weight: 700; color: #555; margin-top: 5px; }
+
+    .battery-outline {
+      border: var(--border-thick); border-radius: 6px; height: 25px; width: 90%;
+      margin: 10px auto; position: relative; background: white;
+    }
+    .battery-fill {
+      height: 100%; width: 0%; background: var(--pop-pink);
+      transition: width 0.4s, background 0.4s; border-right: var(--border-thick);
+    }
+    .milestones { display: flex; justify-content: space-between; width: 90%; margin: 0 auto; font-size: 0.7rem; font-weight: 700; }
+
+    /* LIBRARY */
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+    .food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; max-height: 600px; overflow-y: auto; padding-right: 5px;}
+
+    .food-card {
+      background: white; border: var(--border-thick); border-radius: 8px; padding: 10px;
+      text-align: center; cursor: pointer; box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    }
+    .food-card:hover { background-color: var(--bg-light); transform: translate(-2px, -2px); box-shadow: 4px 4px 0px var(--text-dark); }
+    .food-card:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--text-dark); }
+
+    .food-emoji { font-size: 2.2rem; margin-bottom: 5px; }
+    .food-name { font-size: 0.85rem; font-weight: 700; margin-bottom: 5px; }
+    .food-cal { color: var(--pop-pink); font-weight: 900; font-size: 0.9rem; }
+    .food-score-badge { font-size: 0.75rem; background: var(--pop-teal); border: 2px solid var(--text-dark); border-radius: 4px; padding: 2px 5px; font-weight: 700; margin-top: 5px; display: inline-block;}
+
+    /* PLATE SIDEBAR */
+    .plate-items { flex-grow: 1; overflow-y: auto; max-height: 400px; margin: 15px 0; }
+    .plate-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px; border: var(--border-thick); border-radius: 6px; margin-bottom: 8px; background: var(--bg-light);
+    }
+    .plate-item-info { flex-grow: 1; margin-left: 8px; line-height: 1.2; }
+    .plate-item-info strong { font-size: 0.85rem; }
+    
+    .qty-controls button {
+      background: var(--pop-teal); border: 2px solid var(--text-dark); width: 24px; height: 24px;
+      border-radius: 4px; cursor: pointer; font-weight: 900; box-shadow: 2px 2px 0px var(--text-dark);
+    }
+    .qty-controls button:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px var(--text-dark); }
+    .qty-controls span { margin: 0 5px; font-weight: 700; font-size: 0.9rem;}
+
+    .add-custom-btn {
+      background: var(--pop-pink); color: white; border: var(--border-thick); padding: 12px;
+      border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: 900; font-family: 'Space Grotesk', sans-serif;
+      box-shadow: var(--shadow-hard); width: 100%; text-transform: uppercase;
+    }
+    .add-custom-btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px var(--text-dark); }
+
+    /* MODALS & TOASTS */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000;
+    }
+    .modal-content {
+      background: white; border: var(--border-thick); box-shadow: var(--shadow-hard);
+      padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; text-align: center;
+    }
+    .modal-content input {
+      width: 90%; padding: 10px; margin: 10px 0; border: 2px solid var(--text-dark);
+      border-radius: 4px; font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    }
+    .modal-btn {
+      background: var(--pop-blue); color: white; border: 2px solid var(--text-dark);
+      padding: 10px 20px; font-weight: 900; cursor: pointer; border-radius: 4px; box-shadow: var(--shadow-sm); margin-top: 10px;
+    }
+
+    .toast-container {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 2000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast {
+      background: var(--pop-yellow); border: var(--border-thick); box-shadow: var(--shadow-hard);
+      padding: 12px 20px; border-radius: 6px; font-weight: 700; color: var(--text-dark);
+      animation: slideUp 0.3s ease-out forwards, fadeOut 0.3s ease-in 3.5s forwards; max-width: 300px; text-align: center; font-size: 0.85rem;
+    }
+    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+    #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti"></canvas>
+
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <h1>MY FOOD FUEL</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn-action" onclick="showLogModal()">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg> Log
+      </button>
+      <button class="btn-action" onclick="showShareModal()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg> Share
+      </button>
+      <button class="btn-action" onclick="resetDay()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Reset
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <main>
+      <div class="trackers-grid">
+        <div class="tracker-box calorie-tracker">
+          <h2 id="encouragement">LET'S FUEL UP!</h2>
+          <h1 id="total-cals">0 / 1800 <span style="font-size:1.2rem">KCAL</span></h1>
+          <div class="battery-outline">
+            <div class="battery-fill" id="battery-fill"></div>
+          </div>
+          <div class="milestones">
+            <span>0</span>
+            <span>450</span>
+            <span>900</span>
+            <span>1350</span>
+            <span>1800</span>
+          </div>
+        </div>
+
+        <div class="tracker-box goodness-tracker">
+          <h2>GOODNESS SCORE</h2>
+          <div id="goodness-score-display">0</div>
+          <div class="goodness-note">A balanced diet is key to being healthy.</div>
+        </div>
+      </div>
+
+      <div class="trendy-card">
+        <div class="filters" id="filters">
+          <button class="filter-btn active" data-cat="all">All</button>
+          <button class="filter-btn" data-cat="breakfast">Brekkie</button>
+          <button class="filter-btn" data-cat="lunch">Lunch</button>
+          <button class="filter-btn" data-cat="dinner">Dinner</button>
+          <button class="filter-btn" data-cat="meats">Meats</button>
+          <button class="filter-btn" data-cat="snacks">Snacks</button>
+          <button class="filter-btn" data-cat="fruitveg">Fruit & Veg</button>
+          <button class="filter-btn" data-cat="drinks">Drinks</button>
+        </div>
+        <div class="food-grid" id="food-grid"></div>
+      </div>
+    </main>
+
+    <aside class="trendy-card plate-section">
+      <h2>🍽️ MY PLATE</h2>
+      <div class="plate-items" id="plate-items">
+        <p style="text-align:center; font-weight:700; color:#666;">Your plate is empty.</p>
+      </div>
+      <button class="add-custom-btn" onclick="openCustomFoodModal()">+ Custom Food</button>
+    </aside>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Custom Food Modal -->
+  <div class="modal-overlay" id="custom-food-modal">
+    <div class="modal-content">
+      <h2>Create Custom Food</h2>
+      <input type="text" id="custom-name" placeholder="Food Name (e.g. Grandma's Soup)">
+      <input type="number" id="custom-cals" placeholder="Calories (e.g. 250)">
+      <input type="number" id="custom-score" placeholder="Goodness Score (-2 to 5)">
+      <input type="text" id="custom-emoji" placeholder="Emoji (e.g. 🍲)">
+      <br>
+      <button class="modal-btn" onclick="saveCustomFood()">Add to Plate</button>
+      <button class="modal-btn" style="background:white; color:black;" onclick="closeModals()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Share / Report Card Modal -->
+  <div class="modal-overlay" id="share-modal">
+    <div class="modal-content" id="report-card" style="background: var(--pop-yellow); border: 4px solid #111;">
+      <h2 style="font-size: 2rem; margin-bottom:10px;">⚡ REPORT CARD ⚡</h2>
+      <h3 id="report-day" style="background: white; border: 2px solid #111; display:inline-block; padding: 5px 15px; border-radius: 20px;">Monday</h3>
+      
+      <div style="background: white; border: 3px solid #111; padding: 15px; margin: 15px 0; border-radius: 8px;">
+        <p style="margin: 0; font-weight: 900; font-size: 1.2rem;">Calories Fueled:</p>
+        <h1 id="report-cals" style="margin: 5px 0; color: var(--pop-pink); font-size: 2.5rem;">0</h1>
+      </div>
+      
+      <div style="background: white; border: 3px solid #111; padding: 15px; margin: 15px 0; border-radius: 8px;">
+        <p style="margin: 0; font-weight: 900; font-size: 1.2rem;">Goodness Score:</p>
+        <h1 id="report-score" style="margin: 5px 0; font-size: 2.5rem;">0</h1>
+        <p id="report-message" style="font-weight: 700; margin-top: 10px; font-size: 0.9rem; color: #333;"></p>
+      </div>
+
+      <p style="font-size: 0.8rem; font-weight: 700;">Screenshot this to share!</p>
+      <button class="modal-btn" style="background: var(--pop-pink); width: 100%;" onclick="closeModals()">Close</button>
+    </div>
+  </div>
+
+  <!-- Log Modal -->
+  <div class="modal-overlay" id="log-modal">
+    <div class="modal-content" style="max-height: 80vh; display: flex; flex-direction: column;">
+      <h2>Today's Food Log</h2>
+      <div id="log-list" style="overflow-y: auto; text-align: left; margin: 15px 0; flex-grow: 1;"></div>
+      <button class="modal-btn" onclick="closeModals()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const GOAL = 1800;
+    let currentCals = 0;
+    let currentScore = 0;
+    let plate = [];
+
+    // Audio Context Setup
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      if (type === 'add') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+      } else if (type === 'win') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+      }
+    }
+
+    // 150+ Food Database
+    const foodDatabase = [
+      // BREAKFAST
+      { id: 'b1', name: 'Scrambled Eggs on Sourdough', cal: 380, cat: 'breakfast', emoji: '🥚', score: 3, info: 'Eggs are packed with protein to build strong muscles!' },
+      { id: 'b2', name: 'Smashed Avo on Toast', cal: 340, cat: 'breakfast', emoji: '🥑', score: 4, info: 'Avocado has healthy fats that are great for your brain.' },
+      { id: 'b3', name: 'Oats with Berries', cal: 320, cat: 'breakfast', emoji: '🥣', score: 4, info: 'Oats give you long-lasting energy for the whole school morning.' },
+      { id: 'b4', name: 'Bacon, Eggs & Toast', cal: 460, cat: 'breakfast', emoji: '🍳', score: 1, info: 'A tasty weekend treat, but bacon is high in salt.' },
+      { id: 'b5', name: 'Pancakes with Maple Syrup', cal: 430, cat: 'breakfast', emoji: '🥞', score: 0, info: 'Yummy! But high in sugar, so it gives short energy bursts.' },
+      { id: 'b6', name: 'Weet-Bix with Milk', cal: 240, cat: 'breakfast', emoji: '🥣', score: 3, info: 'A classic Aussie start! Great fiber and iron.' },
+      { id: 'b7', name: 'Vegemite on Toast', cal: 190, cat: 'breakfast', emoji: '🍞', score: 2, info: 'Full of B-vitamins for energy, but quite salty.' },
+      { id: 'b8', name: 'Greek Yogurt & Honey', cal: 210, cat: 'breakfast', emoji: '🍯', score: 3, info: 'Yogurt has probiotics that keep your tummy happy.' },
+      { id: 'b9', name: 'Breakfast Burrito', cal: 480, cat: 'breakfast', emoji: '🌯', score: 2, info: 'Beans and eggs give you a big protein punch.' },
+      { id: 'b10', name: 'Fruit Salad Bowl', cal: 150, cat: 'breakfast', emoji: '🥗', score: 5, info: 'Vitamins galore! Nature’s candy.' },
+      { id: 'b11', name: 'Smoothie Bowl', cal: 300, cat: 'breakfast', emoji: '🥥', score: 4, info: 'Blended fruits give you instant vitamins and hydration.' },
+      { id: 'b12', name: 'Toast with Peanut Butter', cal: 280, cat: 'breakfast', emoji: '🥜', score: 3, info: 'Peanut butter gives you healthy fats and protein.' },
+
+      // LUNCH
+      { id: 'l1', name: 'Ham, Cheese & Tomato Toastie', cal: 380, cat: 'lunch', emoji: '🥪', score: 2, info: 'A warm classic! Provides calcium from the cheese.' },
+      { id: 'l2', name: 'Chicken Salad Wrap', cal: 360, cat: 'lunch', emoji: '🌯', score: 4, info: 'Chicken builds muscle, and salad adds vital crunch and vitamins.' },
+      { id: 'l3', name: 'Aussie Meat Pie', cal: 450, cat: 'lunch', emoji: '🥧', score: -1, info: 'A footy favorite, but very high in saturated fat. Sometimes food!' },
+      { id: 'l4', name: 'Sausage Roll with Sauce', cal: 410, cat: 'lunch', emoji: '🥐', score: -1, info: 'Delicious bakery treat, best kept for special occasions.' },
+      { id: 'l5', name: 'Tuna & Sweetcorn Melt', cal: 390, cat: 'lunch', emoji: '🐟', score: 3, info: 'Tuna has Omega-3s which make your brain super smart.' },
+      { id: 'l6', name: 'Banh Mi Pork Roll', cal: 470, cat: 'lunch', emoji: '🥖', score: 2, info: 'Fresh herbs inside are great for you, but the meats are rich.' },
+      { id: 'l7', name: 'Sushi Hand Rolls (2)', cal: 350, cat: 'lunch', emoji: '🍣', score: 3, info: 'Seaweed is packed with iodine for a healthy thyroid.' },
+      { id: 'l8', name: 'Leftover Spag Bol', cal: 460, cat: 'lunch', emoji: '🍝', score: 2, info: 'Carbs give you the energy to run around all afternoon.' },
+      { id: 'l9', name: 'Falafel Wrap', cal: 420, cat: 'lunch', emoji: '🧆', score: 4, info: 'Chickpeas are a magical plant protein with lots of fiber.' },
+      { id: 'l10', name: 'Chicken Schnitzel Roll', cal: 490, cat: 'lunch', emoji: '🥪', score: 1, info: 'Fried chicken is tasty but high in oil.' },
+      
+      // DINNER
+      { id: 'd1', name: 'Classic Spag Bol', cal: 580, cat: 'dinner', emoji: '🍝', score: 3, info: 'Tomatoes in the sauce have lycopene, good for your heart.' },
+      { id: 'd2', name: 'Grilled Fish & Salad', cal: 410, cat: 'dinner', emoji: '🐟', score: 5, info: 'Perfect brain food with lean protein and veggies.' },
+      { id: 'd3', name: 'Fish & Hot Chips', cal: 610, cat: 'dinner', emoji: '🍟', score: 0, info: 'Fried food is heavy on the tummy. Enjoy it slowly!' },
+      { id: 'd4', name: 'Sunday Roast Lamb & Veg', cal: 620, cat: 'dinner', emoji: '🍖', score: 3, info: 'Lamb gives you iron, and roast veggies are full of fiber.' },
+      { id: 'd5', name: 'Chicken Parma & Chips', cal: 680, cat: 'dinner', emoji: '🍗', score: 0, info: 'A pub classic! High calories, gives you lots of fuel to burn.' },
+      { id: 'd6', name: 'Beef Tacos (3)', cal: 490, cat: 'dinner', emoji: '🌮', score: 3, info: 'Adding lettuce and tomato makes this a great balanced meal.' },
+      { id: 'd7', name: 'Butter Chicken & Rice', cal: 570, cat: 'dinner', emoji: '🍛', score: 2, info: 'Spices are great for you, but the creamy sauce is rich.' },
+      { id: 'd8', name: 'Beef Lasagne', cal: 630, cat: 'dinner', emoji: '🧀', score: 2, info: 'Layers of pasta and cheese give you massive energy.' },
+      { id: 'd9', name: 'Mediterranean Chicken Skewers', cal: 400, cat: 'dinner', emoji: '🍢', score: 5, info: 'Lean protein and olive oil are the heart-healthy Mediterranean way!' },
+      { id: 'd10', name: 'Vegetable Stir Fry', cal: 350, cat: 'dinner', emoji: '🥢', score: 5, info: 'Different colored veggies give you a rainbow of vitamins.' },
+      { id: 'd11', name: 'Homemade Pizza', cal: 500, cat: 'dinner', emoji: '🍕', score: 2, info: 'Making it at home means less salt and more healthy toppings.' },
+
+      // MEATS & SIDES
+      { id: 'm1', name: '200g Rump Steak', cal: 420, cat: 'meats', emoji: '🥩', score: 2, info: 'Steak is packed with iron for healthy red blood cells.' },
+      { id: 'm2', name: '200g Grilled Chicken', cal: 330, cat: 'meats', emoji: '🍗', score: 4, info: 'Lean chicken is pure muscle-building fuel.' },
+      { id: 'm3', name: 'Sausages (2)', cal: 350, cat: 'meats', emoji: '🌭', score: -1, info: 'Sausages are fun but high in hidden fats.' },
+      { id: 'm4', name: 'Mashed Potatoes', cal: 140, cat: 'meats', emoji: '🥔', score: 2, info: 'Potatoes are great starchy carbs for fast energy.' },
+      { id: 'm5', name: 'Hot Chips (Chicken Salt)', cal: 280, cat: 'meats', emoji: '🍟', score: -1, info: 'Salty and deep fried. Delicious, but a sometimes food.' },
+      { id: 'm6', name: 'Steamed Rice', cal: 200, cat: 'meats', emoji: '🍚', score: 2, info: 'Rice is a staple carb that fuels athletes.' },
+      { id: 'm7', name: 'Pasta Bowl (Plain)', cal: 210, cat: 'meats', emoji: '🍝', score: 2, info: 'Pasta gives you complex carbs for long sports games.' },
+      { id: 'm8', name: 'Roast Sweet Potato', cal: 150, cat: 'meats', emoji: '🍠', score: 5, info: 'Sweet potatoes have Vitamin A for super eyesight.' },
+      
+      // FRUIT & VEG
+      { id: 'fv1', name: 'Pink Lady Apple', cal: 80, cat: 'fruitveg', emoji: '🍎', score: 4, info: 'Apples have pectin, a fiber that feeds the good bacteria in your gut!' },
+      { id: 'fv2', name: 'Cavendish Banana', cal: 95, cat: 'fruitveg', emoji: '🍌', score: 4, info: 'Bananas are packed with potassium to stop muscle cramps.' },
+      { id: 'fv3', name: 'Carrot Sticks', cal: 30, cat: 'fruitveg', emoji: '🥕', score: 5, info: 'Carrots help you see in the dark thanks to Beta-Carotene!' },
+      { id: 'fv4', name: 'Steamed Broccoli', cal: 45, cat: 'fruitveg', emoji: '🥦', score: 5, info: 'Broccoli looks like tiny trees and makes your bones super strong.' },
+      { id: 'fv5', name: 'Mango Cheek', cal: 105, cat: 'fruitveg', emoji: '🥭', score: 4, info: 'Mangoes are full of Vitamin C to stop you getting sick.' },
+      { id: 'fv6', name: 'Watermelon Wedge', cal: 70, cat: 'fruitveg', emoji: '🍉', score: 4, info: 'Watermelon is 92% water, keeping you hydrated on hot days.' },
+      { id: 'fv7', name: 'Navel Orange', cal: 70, cat: 'fruitveg', emoji: '🍊', score: 4, info: 'Oranges are the champions of Vitamin C.' },
+      { id: 'fv8', name: 'Strawberry Punnet', cal: 50, cat: 'fruitveg', emoji: '🍓', score: 5, info: 'Strawberries have antioxidants that act like shields for your cells.' },
+      { id: 'fv9', name: 'Cucumber Slices', cal: 15, cat: 'fruitveg', emoji: '🥒', score: 5, info: 'Cool cucumbers hydrate your skin and body.' },
+      { id: 'fv10', name: 'Cherry Tomatoes', cal: 20, cat: 'fruitveg', emoji: '🍅', score: 5, info: 'Bite-sized goodness for a healthy heart.' },
+      { id: 'fv11', name: 'Kiwi Fruit', cal: 45, cat: 'fruitveg', emoji: '🥝', score: 4, info: 'Fuzzy on the outside, packed with vitamins inside.' },
+      { id: 'fv12', name: 'Spinach Leaves', cal: 10, cat: 'fruitveg', emoji: '🥬', score: 5, info: 'Popeye was right! Spinach is loaded with iron.' },
+
+      // SNACKS
+      { id: 's1', name: 'Hummus & Crackers', cal: 180, cat: 'snacks', emoji: '🍘', score: 3, info: 'Hummus is made of chickpeas—great plant energy.' },
+      { id: 's2', name: 'Fairy Bread', cal: 110, cat: 'snacks', emoji: '🧚', score: -2, info: 'Pure sugar and butter! A party classic, but definitely a sometimes food.' },
+      { id: 's3', name: 'Tim Tam (1)', cal: 95, cat: 'snacks', emoji: '🍫', score: -1, info: 'A chocolatey treat. Keep to just one or two!' },
+      { id: 's4', name: 'Handful of Almonds', cal: 160, cat: 'snacks', emoji: '🥜', score: 5, info: 'Almonds give you healthy brain fats to help you focus.' },
+      { id: 's5', name: 'Cheese Stick', cal: 80, cat: 'snacks', emoji: '🧀', score: 2, info: 'Calcium in cheese builds super strong bones and teeth.' },
+      { id: 's6', name: 'Potato Crisps (Packet)', cal: 150, cat: 'snacks', emoji: '🥔', score: -1, info: 'Crispy and salty. Try to swap for popcorn sometimes!' },
+      { id: 's7', name: 'Air-popped Popcorn', cal: 90, cat: 'snacks', emoji: '🍿', score: 3, info: 'Popcorn is actually a whole grain with lots of fiber.' },
+      { id: 's8', name: 'Chocolate Bar', cal: 250, cat: 'snacks', emoji: '🍫', score: -2, info: 'High in sugar and fat. Tastes great, but zero superpowers.' },
+      { id: 's9', name: 'Jatz Crackers & Cheese', cal: 180, cat: 'snacks', emoji: '🧀', score: 1, info: 'A tasty savory snack, but the crackers are a bit salty.' },
+
+      // DRINKS
+      { id: 'dr1', name: 'WPI Protein Shake', cal: 120, cat: 'drinks', emoji: '🥤', score: 3, info: 'Protein repairs your muscles after a hard workout.' },
+      { id: 'dr2', name: 'Milo with Milk', cal: 180, cat: 'drinks', emoji: '🥛', score: 1, info: 'Gives you energy, but Milo has added sugar.' },
+      { id: 'dr3', name: 'Juice Popper', cal: 90, cat: 'drinks', emoji: '🧃', score: 0, info: 'Juice has vitamins but removes all the good fiber from the fruit.' },
+      { id: 'dr4', name: 'Glass of Cold Milk', cal: 120, cat: 'drinks', emoji: '🥛', score: 3, info: 'Packed with calcium for growing bones.' },
+      { id: 'dr5', name: 'Water', cal: 0, cat: 'drinks', emoji: '💧', score: 5, info: 'The ultimate drink! Your body is 60% water.' },
+      { id: 'dr6', name: 'Soft Drink (Can)', cal: 140, cat: 'drinks', emoji: '🥤', score: -2, info: 'Lots of sugar and bubbles, bad for your teeth.' }
+    ];
+
+    const foodGrid = document.getElementById('food-grid');
+    const plateItems = document.getElementById('plate-items');
+    const toastContainer = document.getElementById('toast-container');
+    
+    // Render Library
+    function renderFoods(filter = 'all') {
+      foodGrid.innerHTML = '';
+      const filtered = filter === 'all' ? foodDatabase : foodDatabase.filter(f => f.cat === filter);
+      
+      filtered.forEach(food => {
+        const div = document.createElement('div');
+        div.className = 'food-card';
+        div.onclick = () => addToPlate(food);
+        div.innerHTML = `
+          <div class="food-emoji">${food.emoji}</div>
+          <div class="food-name">${food.name}</div>
+          <div class="food-cal">${food.cal} KCAL</div>
+          <div><span class="food-score-badge">${food.score >= 0 ? '+' : ''}${food.score} Score</span></div>
+        `;
+        foodGrid.appendChild(div);
+      });
+    }
+
+    // Filter Logic
+    document.getElementById('filters').addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON' || e.target.closest('.filter-btn')) {
+        const btn = e.target.closest('.filter-btn');
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderFoods(btn.dataset.cat);
+      }
+    });
+
+    // Plate Logic
+    function addToPlate(food) {
+      const existing = plate.find(item => item.id === food.id);
+      if (existing) { existing.qty++; } 
+      else { plate.push({ ...food, qty: 1 }); }
+      playSound('add');
+      showToast(food.info || `Added ${food.name} to your plate!`);
+      updateApp();
+    }
+
+    function changeQty(id, delta) {
+      const item = plate.find(i => i.id === id);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) plate = plate.filter(i => i.id !== id);
+        updateApp();
+      }
+    }
+
+    // Custom Food Modal Logic
+    function openCustomFoodModal() { document.getElementById('custom-food-modal').style.display = 'flex'; }
+    function closeModals() { 
+      document.getElementById('custom-food-modal').style.display = 'none'; 
+      document.getElementById('share-modal').style.display = 'none';
+      document.getElementById('log-modal').style.display = 'none';
+    }
+    
+    function saveCustomFood() {
+      const name = document.getElementById('custom-name').value;
+      const cal = parseInt(document.getElementById('custom-cals').value);
+      const score = parseInt(document.getElementById('custom-score').value);
+      let emoji = document.getElementById('custom-emoji').value || '🍽️';
+      
+      if (!name || isNaN(cal) || isNaN(score)) return showToast("Please fill in the name, calories, and score!");
+      
+      const newFood = { id: 'c' + Date.now(), name, cal, score, cat: 'custom', emoji, info: 'Custom foods are a mystery power!' };
+      addToPlate(newFood);
+      closeModals();
+      document.getElementById('custom-name').value = '';
+      document.getElementById('custom-cals').value = '';
+      document.getElementById('custom-score').value = '';
+      document.getElementById('custom-emoji').value = '';
+    }
+
+    // Toast Notification
+    function showToast(message) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.innerText = message;
+      toastContainer.appendChild(t);
+      setTimeout(() => { if(t.parentElement) t.remove(); }, 4000);
+    }
+
+    // Share Modal & Log Modal
+    function showShareModal() {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      document.getElementById('report-day').innerText = days[new Date().getDay()];
+      document.getElementById('report-cals').innerText = currentCals + " KCAL";
+      document.getElementById('report-score').innerText = currentScore;
+      
+      const msg = document.getElementById('report-message');
+      if (currentScore >= 15) {
+        msg.innerText = "You hit your food fuel goodness for your mind and muscles!";
+        msg.style.color = "#4CAF50";
+      } else {
+        msg.innerText = "Keep adding nutritious foods to boost your score!";
+        msg.style.color = "#E71D36";
+      }
+      document.getElementById('share-modal').style.display = 'flex';
+    }
+
+    function showLogModal() {
+      const list = document.getElementById('log-list');
+      if (plate.length === 0) {
+        list.innerHTML = "<p>You haven't eaten anything yet today!</p>";
+      } else {
+        list.innerHTML = plate.map(item => `
+          <div style="border-bottom: 2px solid #111; padding: 10px 0;">
+            <strong style="font-size:1.1rem;">${item.emoji} ${item.name} (x${item.qty})</strong><br>
+            <span style="color:var(--pop-pink); font-weight:bold;">${item.cal * item.qty} kcal</span> | 
+            <span style="color:var(--pop-teal); font-weight:bold;">Score: ${(item.score * item.qty)}</span>
+          </div>
+        `).join('');
+      }
+      document.getElementById('log-modal').style.display = 'flex';
+    }
+
+    function resetDay() {
+      plate = [];
+      updateApp();
+      showToast("Day restarted! Fresh start!");
+    }
+
+    // Update UI & Battery
+    function updateApp() {
+      plateItems.innerHTML = plate.length === 0 
+        ? '<p style="text-align:center; font-weight:700; color:#666;">Your plate is empty.</p>' 
+        : plate.map(item => `
+        <div class="plate-item">
+          <div style="font-size: 1.5rem;">${item.emoji}</div>
+          <div class="plate-item-info">
+            <strong>${item.name}</strong><br>
+            <span style="color: var(--pop-pink); font-weight: 900;">${item.cal * item.qty} KCAL</span>
+          </div>
+          <div class="qty-controls">
+            <button onclick="changeQty('${item.id}', -1)">-</button>
+            <span>${item.qty}</span>
+            <button onclick="changeQty('${item.id}', 1)">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      currentCals = plate.reduce((sum, item) => sum + (item.cal * item.qty), 0);
+      currentScore = plate.reduce((sum, item) => sum + (item.score * item.qty), 0);
+      
+      // Update Cals
+      document.getElementById('total-cals').innerHTML = `${currentCals} / ${GOAL} <span style="font-size:1.2rem">KCAL</span>`;
+      let pct = Math.min((currentCals / GOAL) * 100, 100);
+      const fill = document.getElementById('battery-fill');
+      fill.style.width = pct + '%';
+      
+      if (pct < 33) fill.style.background = 'var(--pop-pink)';
+      else if (pct < 66) fill.style.background = 'var(--pop-blue)';
+      else fill.style.background = 'var(--pop-teal)';
+
+      // Update Goodness Score Color Grade (Red to Green)
+      const scoreDisplay = document.getElementById('goodness-score-display');
+      scoreDisplay.innerText = currentScore;
+      
+      // Calculate Hue: 0 (Red) to 120 (Green) based on approaching score of 30.
+      let clampedScore = Math.max(0, Math.min(currentScore, 30));
+      let hue = (clampedScore / 30) * 120;
+      scoreDisplay.style.color = `hsl(${hue}, 80%, 50%)`;
+
+      const msg = document.getElementById('encouragement');
+      if (currentCals === 0) msg.innerText = "LET'S FUEL UP!";
+      else if (currentCals < 450) msg.innerText = "NICE START!";
+      else if (currentCals < 900) msg.innerText = "KEEP IT GOING!";
+      else if (currentCals < 1350) msg.innerText = "HALFWAY THERE!";
+      else if (currentCals < 1800) msg.innerText = "ALMOST AT FULL POWER!";
+      else if (currentCals >= 1800) {
+        msg.innerText = "FULL POWER REACHED!";
+        if (currentCals - (plate[plate.length-1].cal) < 1800) triggerWin();
+      }
+    }
+
+    // Confetti Effect
+    function triggerWin() {
+      playSound('win');
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const colors = ['#F72585', '#4361EE', '#00F5D4', '#FEE440', '#111111'];
+      const particles = [];
+      for(let i=0; i<100; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          w: Math.random() * 12 + 6,
+          h: Math.random() * 12 + 6,
+          dx: Math.random() * 6 - 3,
+          dy: Math.random() * 6 + 3,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0,0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.dx; p.y += p.dy;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.w, p.h);
+          ctx.strokeStyle = '#111';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(p.x, p.y, p.w, p.h);
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+      setTimeout(() => ctx.clearRect(0,0, canvas.width, canvas.height), 3000);
+    }
+
+    // Init
+    renderFoods('all');
+  </script>
+</body>
+</html>
